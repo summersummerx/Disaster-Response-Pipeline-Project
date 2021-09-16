@@ -17,7 +17,11 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics import classification_report, recall_score, precision_score, accuracy_score
 
 def load_data(database_filepath):
-    # read in file
+    '''
+    read in file
+    input: path of the database
+    output: independent variable values, dependent variable values, dependent variable names
+    '''
     engine = create_engine('sqlite:///' + database_filepath, echo=True)
     df = pd.read_sql_table("drmessage", con=engine) 
     # define features and label arrays
@@ -28,6 +32,11 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    '''
+    clean and tokenize text
+    input: sentences from document
+    output: a list of clean tokens
+    '''
     #remove punctuations
     text = re.sub(r"[^a-zA-Z0-9]", " ", text) 
     tokens = word_tokenize(text)
@@ -40,6 +49,11 @@ def tokenize(text):
     return clean_tokens
 
 def build_model():
+    '''
+    model pipeline including parameters search
+    input: None
+    output: cv from gridsearch result
+    '''
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -55,11 +69,21 @@ def build_model():
     return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''
+    evaluate model
+    input: trained model, x from test data, y from test data, y names
+    output: printout of the classification report for each of the dependent variables
+    '''
     y_pred = model.predict(X_test)
     for i in range(36):
         print('classification report for category {0} is \n {1}'.format(category_names[i].upper(),classification_report(Y_test[:,i], y_pred[:,i])))
 
 def save_model(model, model_filepath):
+    '''
+    save trained model for future use
+    input: model, filepath the model will be saved under
+    ouput: None
+    '''
     pickle.dump(model, open(model_filepath, 'wb'))
 
 

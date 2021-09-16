@@ -8,7 +8,7 @@ from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar, Scatter
+from plotly.graph_objs import Bar, Scatter, Pie
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
@@ -16,6 +16,11 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 
 def tokenize(text):
+    '''
+    clean and transform text into tokens
+    input: sentences from document
+    output: a list of cleaned tokens
+    '''
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -27,6 +32,13 @@ def tokenize(text):
     return clean_tokens
 
 def tokenize_self(text):
+    '''
+    added extra step to remove punctuations from text
+    as we'd like to count text length without punctuations
+    clean and transform text into tokens
+    input: sentences from document
+    output: a list of cleaned tokens
+    '''
     #remove punctuations
     text = re.sub(r"[^a-zA-Z0-9]", " ", text) 
     tokens = word_tokenize(text)
@@ -38,11 +50,12 @@ def tokenize_self(text):
         clean_tokens.append(clean_tok)
     return clean_tokens
 # load data
-engine = create_engine('sqlite:///data/DisasterResponse.db', echo=True)
+engine = create_engine('sqlite:////home/workspace/data/DisasterResponse.db', echo=True)
 df = pd.read_sql_table("drmessage", engine)
+df_lang = pd.read_sql_table("messagelang", engine)
 
 # load model
-model = joblib.load("./models/classifier.pkl")
+model = joblib.load("/home/workspace/models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -51,16 +64,22 @@ model = joblib.load("./models/classifier.pkl")
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
+    # data used for graph1
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    
+    # data used for graph2
     df['message_length'] = df.message.apply(lambda x:len(tokenize_self(x)))
     genre_mlen = df.groupby('genre')['message_length'].mean()
     genre_mlen_names = list(genre_mlen.index)
     
+    # data used for graph3
+    lang_counts = df_lang[df_lang.genre=='direct']['counts']
+    lang_names = list(df_lang.language)
+    
+    
     
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
@@ -107,7 +126,22 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+        
+        {
+            'data': [
+                Pie(
+                    labels=lang_names,
+                    values=lang_counts,
+                    textposition='inside'
+                )
+            ],
+
+            'layout': {
+                'title': 'Launguage used in Messages of Direct Genre'
+            }
         }
+
     ]
     
     # encode plotly graphs in JSON

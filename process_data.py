@@ -4,11 +4,21 @@ import numpy as np
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    merge two datasets
+    input: messages data file path, categories data file path
+    output: data after combining both datasets
+    '''
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     return pd.merge(messages, categories, on = 'id', how = 'left')
 
 def clean_data(df):
+    '''
+    clean the data
+    input: dataframe to be cleaned
+    output: cleaned dataframe
+    '''
     # create a dataframe of the 36 individual category columns
     categories = df.categories.str.split(';', expand=True)
     # select the first row of the categories dataframe
@@ -33,6 +43,11 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''
+    save dataframe to database for later use
+    input: cleaned dataframe
+    output: database filepath
+    '''
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('drmessage', con=engine, if_exists='replace', index=False)
 
