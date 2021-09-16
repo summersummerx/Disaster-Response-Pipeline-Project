@@ -24,7 +24,7 @@ from sqlalchemy import create_engine
 #detect language used in messages                                                                                                                                                   
 df['language'] = df.original.apply(lambda x: detect(x) if pd.notnull(x) and bool(re.match('^(?=.*[a-zA-Z])',x)) else 'en')                                                         
 #messagelang is stored to database for data visualization                                                                                                                           
-messagelang = df.groupby(['genre','language'])['message'].count()
+messagelang = df.groupby(['genre','language'])['message'].count()                                                                                                     
 engine = create_engine('sqlite:///data/DisasterResponse.db)                                                                                                                                                                                                                       
 messagelang.to_sql('messagelang', con=engine, if_exists='replace', index=False)                                                                                        
 
