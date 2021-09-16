@@ -25,7 +25,7 @@ from sqlalchemy import create_engine
 df['language'] = df.original.apply(lambda x: detect(x) if pd.notnull(x) and bool(re.match('^(?=.*[a-zA-Z])',x)) else 'en')                                                         
 #messagelang is stored to database for data visualization                                                                                                                           
 messagelang = df.groupby(['genre','language'])['message'].count()
-engine = create_engine('sqlite:///data/DisasterResponse.db)                                                                                                             
+engine = create_engine('sqlite:///data/DisasterResponse.db)                                                                                                                                                                                                                       
 messagelang.to_sql('messagelang', con=engine, if_exists='replace', index=False)                                                                                        
 
 #### The project was done in Project Workspace within Udacity. The file structure of the project:
