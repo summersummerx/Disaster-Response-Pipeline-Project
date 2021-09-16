@@ -50,12 +50,12 @@ def tokenize_self(text):
         clean_tokens.append(clean_tok)
     return clean_tokens
 # load data
-engine = create_engine('sqlite:////home/workspace/data/DisasterResponse.db', echo=True)
+engine = create_engine('sqlite:///./data/DisasterResponse.db', echo=True)
 df = pd.read_sql_table("drmessage", engine)
 df_lang = pd.read_sql_table("messagelang", engine)
 
 # load model
-model = joblib.load("/home/workspace/models/classifier.pkl")
+model = joblib.load("./models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
