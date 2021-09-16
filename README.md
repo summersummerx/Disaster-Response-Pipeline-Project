@@ -13,7 +13,7 @@ There are three components of the project, and they were run consecutively:
 3. Flask web app: data visualization --->  run.py                                                                                                                                   
    To run the web app in workspace/app folder: python run.py
    
-# Please note in order to create the pie chart for languages used in the original messages, additional data processing was run in the terminal.                                       
+#### Please note in order to create the pie chart for languages used in the original messages, additional data processing was run in the terminal.                                       
 Due to the usage of a new python package langdetect, the below chunk of code doesn't fit into the three components of the project:                                                
 
 #to install python package langdetect                                                                                                                                               
@@ -28,7 +28,7 @@ messagelang = df.groupby(['genre','language'])['message'].count()
 engine = create_engine('sqlite:///data/DisasterResponse.db)                                                                                                             
 messagelang.to_sql('messagelang', con=engine, if_exists='replace', index=False)                                                                                        
 
-The project was done in Project Workspace within Udacity. The file structure of the project:
+#### The project was done in Project Workspace within Udacity. The file structure of the project:
 - app                                                                                                                                                                 
 | - template                                                                                                                                                           
 | |- master.html  # main page of web app                                                                                                                               
