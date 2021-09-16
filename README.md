@@ -21,11 +21,13 @@ pip install langdetect
 from langdetect import detect                                                                                                                                                       
 import re                                                                                                                                                             
 from sqlalchemy import create_engine                                                                                                                                   
+import pandas as pd                                                                                                                                                             
+engine = create_engine('sqlite:///data/DisasterResponse.db')                                                                                                                     
+df = pd.read_sql_table('drmessage', engine)                                                                                                                                       
 #detect language used in messages                                                                                                                                                   
 df['language'] = df.original.apply(lambda x: detect(x) if pd.notnull(x) and bool(re.match('^(?=.*[a-zA-Z])',x)) else 'en')                                                         
 #messagelang is stored to database for data visualization                                                                                                                           
-messagelang = df.groupby(['genre','language'])['message'].count()                                                                                                     
-engine = create_engine('sqlite:///data/DisasterResponse.db)                                                                                                                                                                                                                       
+messagelang = df.groupby(['genre','language'])['message'].count().reset_index().rename(columns={'message':'counts'})                                                                                                                                                                               
 messagelang.to_sql('messagelang', con=engine, if_exists='replace', index=False)                                                                                        
 
 #### The project was done in Project Workspace within Udacity. The file structure of the project:
