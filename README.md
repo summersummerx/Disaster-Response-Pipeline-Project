@@ -11,7 +11,7 @@ There are three components of the project, and they were run consecutively:
    To run the ML pipeline: python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
    
 3. Flask web app: data visualization --->  run.py                                                                                                                                   
-   To run the web app in workspace/app folder: python run.py
+   To run the web app: python app/run.py
    
 #### Please note in order to create the pie chart for languages used in the original messages, additional data processing was run in the terminal.                                       
 Due to the usage of a new python package langdetect, the below chunk of code doesn't fit into the three components of the project:                                                
